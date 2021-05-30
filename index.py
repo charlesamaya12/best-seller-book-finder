@@ -10,7 +10,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from app import app
+from app import app, server #need server for gunicorn index:server
 from pages import page1, page2
 
 url_bar_and_content_div = html.Div([
@@ -48,4 +48,4 @@ def display_page(pathname):
         return '404'
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
