@@ -9,19 +9,31 @@ Created on Sat May 29 16:52:19 2021
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import os
 
 from app import app, server #need server for gunicorn index:server
 from pages import page1, page2
 
+topnav = html.Div(
+    className='w3-bar w3-border w3-light-grey',
+    children=[
+        dcc.Link('HOME', href='/', 
+                 className='w3-bar-item w3-button w3-mobile w3-light-blue'),
+        dcc.Link('PAGE1', href='/pages/page-1', 
+                 className='w3-bar-item w3-button w3-mobile w3-right'),
+        dcc.Link('PAGE2', href='/pages/page-2', 
+                 className='w3-bar-item w3-button w3-mobile w3-right'),
+    ])
+
+layout_index = html.Div(
+    [
+     topnav,
+     
+    ])
+
 url_bar_and_content_div = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
-])
-
-layout_index = html.Div([
-    dcc.Link('Navigate to "/page-1"', href='/pages/page-1'),
-    html.Br(),
-    dcc.Link('Navigate to "/page-2"', href='/pages/page-2'),
 ])
 
 # index layout
@@ -48,4 +60,7 @@ def display_page(pathname):
         return '404'
 
 if __name__ == '__main__':
-    app.run_server()
+    if(os.environ['SERVERENV']=='DEBUG'):
+        app.run_server(debug=True)
+    else:
+        app.run_server()
