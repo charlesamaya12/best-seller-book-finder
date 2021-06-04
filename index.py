@@ -12,17 +12,19 @@ from dash.dependencies import Input, Output
 import os
 
 from app import app, server #need server for gunicorn index:server
+#from app import get_asset_url
 from pages import page1, page2
 
 topnav = html.Div(
     className='w3-bar w3-border w3-light-grey',
     children=[
-        dcc.Link('HOME', href='/', 
-                 className='w3-bar-item w3-button w3-mobile w3-light-blue'),
+        dcc.Link(
+            html.Img(src='/assets/logo.png', alt='HOME', className='width:100% max-width:40px'), 
+            href='/', className='w3-bar-item'),
         dcc.Link('PAGE1', href='/pages/page-1', 
-                 className='w3-bar-item w3-button w3-mobile w3-right'),
+                 className='w3-bar-item w3-button w3-right'),
         dcc.Link('PAGE2', href='/pages/page-2', 
-                 className='w3-bar-item w3-button w3-mobile w3-right'),
+                 className='w3-bar-item w3-button w3-right'),
     ])
 
 layout_index = html.Div(
