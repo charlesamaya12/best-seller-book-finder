@@ -13,16 +13,10 @@ from dash.dependencies import Input, Output
 from app import app
 from app import best_seller_history
 
-topnav = html.Div(
-    className='w3-bar w3-border w3-light-grey',
-    children=[
-        dcc.Link('HOME', href='/', 
-                 className='w3-bar-item w3-button w3-mobile'),
-        dcc.Link('PAGE1', href='/pages/page-1', 
-                 className='w3-bar-item w3-button w3-mobile w3-right'),
-        dcc.Link('PAGE2', href='/pages/page-2', 
-                 className='w3-bar-item w3-button w3-mobile w3-right w3-light-blue'),
-    ])
+from layouts import templates
+
+topnav = templates.topnav
+
 
 def generate_table(dataframe, max_rows=100):
     return html.Table([
