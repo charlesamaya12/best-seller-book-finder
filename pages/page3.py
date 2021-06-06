@@ -9,11 +9,13 @@ Created on Sat Jun  5 01:07:18 2021
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app import app
+from app import best_seller_history
 
 from layouts import templates
 
 topnav = templates.topnav
+
+book = best_seller_history.iloc[0, :]
 
 book_card = html.Div(
     html.Div(
@@ -26,7 +28,7 @@ book_card = html.Div(
             href="https://www.amazon.com/gp/product/0062457802/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0062457802&linkCode=as2&tag=bestsellerbookfinder-20&linkId=3a919631bc9cbe27d4b70c7a7a5156fc", 
             target='_blank',
         ),
-        html.H2("Info")
+        
         ],
         className='w3-container w3-center w3-padding'
     ),

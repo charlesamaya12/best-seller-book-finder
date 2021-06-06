@@ -14,21 +14,10 @@ from app import app
 from app import best_seller_history
 
 from layouts import templates
+from utils import helpers
 
 topnav = templates.topnav
 
-
-def generate_table(dataframe, max_rows=100):
-    return html.Table([
-        html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns])
-        ),
-        html.Tbody([
-            html.Tr([
-                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-            ]) for i in range(min(len(dataframe), max_rows))
-        ])
-    ])
 
 markdown_text = '''
 ### Dash and Markdown
@@ -56,7 +45,7 @@ table_layout = html.Div([
     dcc.Link('Navigate to Page 1', href='/pages/page-1'),
     html.Br(),
     dcc.Markdown(children=markdown_text),
-    generate_table(best_seller_history[showcols])
+    helpers.generate_table(best_seller_history[showcols])
 ])
 
 layout = html.Div(
