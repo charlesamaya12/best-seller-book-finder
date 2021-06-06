@@ -8,9 +8,10 @@ Created on Sat Jun  5 01:07:18 2021
 
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 import plotly.express as px
 
-from app import best_seller_history
+from app import app, best_seller_history
 
 from layouts import templates
 from utils import helpers
@@ -34,7 +35,7 @@ def book_card(title="", author=""):
             ],
             className='w3-container w3-center w3-padding'
         ),
-        className='w3-card-4 w3-blue w3-cell width:50%'
+        className='w3-card-4 w3-blue w3-cell'
     )
     return book_card
 
@@ -46,9 +47,27 @@ def history_chart(title="", author=""):
     fig.update_layout(legend_title_text='Titles')
     return fig
 
+all_options = {
+    'America': ['New York City', 'San Francisco', 'Cincinnati'],
+    'Canada': [u'Montréal', 'Toronto', 'Ottawa']
+}
+
 
 page_layout = html.Div(
         [
+            dcc.RadioItems(
+                id='countries-radio',
+                options=[{'label': k, 'value': k} for k in all_options.keys()],
+                value='America'
+            ),
+        
+            html.Hr(),
+        
+            dcc.Dropdown(id='cities-dropdown'),
+        
+            html.Hr(),
+        
+            html.Div(id='display-selected-values'),
             dcc.Graph(
                 id='best-seller-history',
                 figure=history_chart()
@@ -62,6 +81,30 @@ page_layout = html.Div(
 layout = html.Div([topnav, page_layout])
 
 #dcc.Location(id='url', refresh=False)
+
+
+@app.callback(
+    Output('cities-dropdown', 'options'),
+    Input('countries-radio', 'value'))
+def set_cities_options(selected_country):
+    return [{'label': i, 'value': i} for i in all_options[selected_country]]
+
+
+@app.callback(
+    Output('cities-dropdown', 'value'),
+    Input('cities-dropdown', 'options'))
+def set_cities_value(available_options):
+    return available_options[0]['value']
+
+
+@app.callback(
+    Output('display-selected-values', 'children'),
+    Input('countries-radio', 'value'),
+    Input('cities-dropdown', 'value'))
+def set_display_children(selected_country, selected_city):
+    return u'{} is a city in {}'.format(
+        selected_city, selected_country,
+    )
 
 
 
