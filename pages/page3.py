@@ -56,21 +56,7 @@ all_options = genre_title_tree
 
 def gen_page_layout(title=''): 
     return html.Div(
-        [
-            #dcc.Location(id='page3url', refresh=False),
-            #html.Div(id='page3-url-content'),
-            #dcc.Dropdown(
-            #    id='genre-dropdown',
-            #    options=[{'label': k, 'value': k} for k in all_options.keys()],
-                #value='ALL'
-            #),
-        
-            #html.Hr(),
-        
-            #dcc.Dropdown(id='title-dropdown'),
-        
-            #html.Hr(),
-        
+        [        
             dcc.Graph(
                 id='best-seller-history',
                 figure=history_chart(title)
