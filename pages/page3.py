@@ -20,7 +20,12 @@ from utils import helpers
 topnav = templates.topnav
 
 def book_card(title="", author=""):
-    book = best_seller_history.iloc[0, :]
+    if(title==''):
+        data = best_seller_history[best_seller_history['title']=="THEY BOTH DIE AT THE END"]
+    else:
+        data = best_seller_history[best_seller_history['title']==title]
+    book = data.iloc[0, :]
+    best_rank = data['rank'].min()
     book_card = html.Div(
         html.Div(
             [
@@ -32,7 +37,23 @@ def book_card(title="", author=""):
                 href="https://www.amazon.com/gp/product/0062457802/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0062457802&linkCode=as2&tag=bestsellerbookfinder-20&linkId=3a919631bc9cbe27d4b70c7a7a5156fc", 
                 target='_blank',
             ),
-            helpers.generate_book_card(book)
+            #helpers.generate_book_card(book)
+            html.Table([
+                html.Tbody([
+            html.Tr([
+                html.Th('Title', scope='row'),
+                html.Td(book['title'])
+            ]),
+            html.Tr([
+                html.Th('Author', scope='row'),
+                html.Td(book['author'])
+            ]),
+            html.Tr([
+                html.Th('Best Rank', scope='row'),
+                html.Td('#'+str(best_rank))
+            ]),
+        ])
+    ])
             ],
             className='w3-container w3-center w3-padding'
         ),
@@ -61,7 +82,7 @@ def gen_page_layout(title=''):
                 id='best-seller-history',
                 figure=history_chart(title)
             ),
-            book_card()
+            book_card(title)
         ],
         className='w3-cell-row'
     )
@@ -80,18 +101,18 @@ def gen_layout(search_query=''):
 #layout = gen_layout()
 
 
-@app.callback(
-    Output('title-dropdown', 'options'),
-    Input('genre-dropdown', 'value'))
-def set_cities_options(selected_country):
-    return [{'label': i, 'value': i} for i in all_options[selected_country]]
+#@app.callback(
+#    Output('title-dropdown', 'options'),
+#    Input('genre-dropdown', 'value'))
+#def set_cities_options(selected_country):
+#    return [{'label': i, 'value': i} for i in all_options[selected_country]]
 
 
-@app.callback(
-    Output('title-dropdown', 'value'),
-    Input('title-dropdown', 'options'))
-def set_cities_value(available_options):
-    return available_options[0]['value']
+#@app.callback(
+#    Output('title-dropdown', 'value'),
+#    Input('title-dropdown', 'options'))
+#def set_cities_value(available_options):
+#    return available_options[0]['value']
 
 
 
