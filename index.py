@@ -40,8 +40,9 @@ app.validation_layout = html.Div([
 ])
 
 @app.callback(Output('page-content', 'children'),
-              Input('url', 'pathname'))
-def display_page(pathname):
+              Input('url', 'pathname'),
+              Input('url', 'search'))
+def display_page(pathname, search):
     if pathname == '/':
         return layout_index
     elif pathname == '/pages/page-1':
@@ -49,7 +50,7 @@ def display_page(pathname):
     elif pathname == '/pages/page-2':
         return page2.layout
     elif pathname == '/pages/page-3':
-        return page3.layout
+        return page3.gen_layout(search)
     else:
         return '404'
 

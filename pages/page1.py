@@ -19,7 +19,7 @@ from layouts import templates
 topnav = templates.topnav
 
 fig1 = px.line(best_seller_history, x="bestsellers_date", y="rank", color='title', template='plotly_white')
-fig1.update_traces(mode='lines+markers', line_shape='spline')
+fig1.update_traces(mode='lines+markers', line_shape='linear')
 fig1['layout']['yaxis']['autorange'] = "reversed"
 fig1.update_layout(legend_title_text='Titles')
 

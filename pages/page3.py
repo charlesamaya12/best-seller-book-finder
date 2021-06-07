@@ -5,13 +5,14 @@ Created on Sat Jun  5 01:07:18 2021
 
 @author: chandy
 """
+import urllib.parse as upr
 
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
 
-from app import app, best_seller_history
+from app import app, best_seller_history, genre_title_tree
 
 from layouts import templates
 from utils import helpers
@@ -39,72 +40,74 @@ def book_card(title="", author=""):
     )
     return book_card
 
-def history_chart(title="", author=""):
-    data = best_seller_history[best_seller_history['title']=="THEY BOTH DIE AT THE END"]
+def history_chart(title='', author=""):
+    if(title==''):
+        data = best_seller_history[best_seller_history['title']=="THEY BOTH DIE AT THE END"]
+    else:
+        data = best_seller_history[best_seller_history['title']==title]
     fig = px.line(data, x="bestsellers_date", y="rank", color='title', template='plotly_white')
     fig.update_traces(mode='lines+markers', line_shape='spline')
     fig['layout']['yaxis']['autorange'] = "reversed"
     fig.update_layout(legend_title_text='Titles')
     return fig
 
-all_options = {
-    'America': ['New York City', 'San Francisco', 'Cincinnati'],
-    'Canada': [u'Montréal', 'Toronto', 'Ottawa']
-}
+all_options = genre_title_tree
 
 
-page_layout = html.Div(
+def gen_page_layout(title=''): 
+    return html.Div(
         [
-            dcc.RadioItems(
-                id='countries-radio',
-                options=[{'label': k, 'value': k} for k in all_options.keys()],
-                value='America'
-            ),
+            #dcc.Location(id='page3url', refresh=False),
+            #html.Div(id='page3-url-content'),
+            #dcc.Dropdown(
+            #    id='genre-dropdown',
+            #    options=[{'label': k, 'value': k} for k in all_options.keys()],
+                #value='ALL'
+            #),
         
-            html.Hr(),
+            #html.Hr(),
         
-            dcc.Dropdown(id='cities-dropdown'),
+            #dcc.Dropdown(id='title-dropdown'),
         
-            html.Hr(),
+            #html.Hr(),
         
-            html.Div(id='display-selected-values'),
             dcc.Graph(
                 id='best-seller-history',
-                figure=history_chart()
+                figure=history_chart(title)
             ),
             book_card()
         ],
         className='w3-cell-row'
     )
 
+def gen_layout(search_query=''):
+    title = ''
+    if(len(search_query) > 0):
+        if(search_query[0]=='?'):
+            param_string = search_query[1:]
+            parsed = upr.parse_qs(param_string)
+            if('title' in list(parsed.keys())):
+                title = parsed['title'][0]
 
-layout = html.Div([topnav, page_layout])
+    return html.Div([topnav, gen_page_layout(title)])
 
-#dcc.Location(id='url', refresh=False)
+#layout = gen_layout()
 
 
 @app.callback(
-    Output('cities-dropdown', 'options'),
-    Input('countries-radio', 'value'))
+    Output('title-dropdown', 'options'),
+    Input('genre-dropdown', 'value'))
 def set_cities_options(selected_country):
     return [{'label': i, 'value': i} for i in all_options[selected_country]]
 
 
 @app.callback(
-    Output('cities-dropdown', 'value'),
-    Input('cities-dropdown', 'options'))
+    Output('title-dropdown', 'value'),
+    Input('title-dropdown', 'options'))
 def set_cities_value(available_options):
     return available_options[0]['value']
 
 
-@app.callback(
-    Output('display-selected-values', 'children'),
-    Input('countries-radio', 'value'),
-    Input('cities-dropdown', 'value'))
-def set_display_children(selected_country, selected_city):
-    return u'{} is a city in {}'.format(
-        selected_city, selected_country,
-    )
 
 
 
