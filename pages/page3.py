@@ -40,24 +40,23 @@ def book_card(title="", author=""):
             #helpers.generate_book_card(book)
             html.Table([
                 html.Tbody([
-            html.Tr([
-                html.Th('Title', scope='row'),
-                html.Td(book['title'])
-            ]),
-            html.Tr([
-                html.Th('Author', scope='row'),
-                html.Td(book['author'])
-            ]),
-            html.Tr([
-                html.Th('Best Rank', scope='row'),
-                html.Td('#'+str(best_rank))
-            ]),
-        ])
-    ])
-            ],
-            className='w3-container w3-center w3-padding'
+                    html.Tr([
+                        html.Th('Title', scope='row'),
+                        html.Td(book['title'])
+                    ]),
+                    html.Tr([
+                        html.Th('Author', scope='row'),
+                        html.Td(book['author'])
+                    ]),
+                    html.Tr([
+                        html.Th('Best Rank', scope='row'),
+                        html.Td('#'+str(best_rank))
+                    ]),
+                ])
+            ], className='w3-content')
+            ]
         ),
-        className='w3-card-4 w3-blue w3-cell'
+        className='w3-card-4 w3-blue w3-center w3-padding-large w3-third'
     )
     return book_card
 
@@ -77,14 +76,15 @@ all_options = genre_title_tree
 
 def gen_page_layout(title=''): 
     return html.Div(
-        [        
+        [    
+            book_card(title),
             dcc.Graph(
                 id='best-seller-history',
-                figure=history_chart(title)
+                figure=history_chart(title),
+                className='w3-twothird'
             ),
-            book_card(title)
         ],
-        className='w3-cell-row'
+        className='w3-row'
     )
 
 def gen_layout(search_query=''):

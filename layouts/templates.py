@@ -11,7 +11,7 @@ import dash_html_components as html
 
 
 topnav = html.Div(
-    className='w3-bar w3-border w3-light-green',
+    className='w3-bar w3-border w3-light-green w3-row',
     children=[
         dcc.Link(
             html.Img(src='/assets/logo-big.png', alt='HOME'), 
